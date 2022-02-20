@@ -54,4 +54,21 @@ class ApiController extends AbstractController
             $response
         );
     }
+
+
+    /**
+     * @Route("/api/rides/select", name="select", methods={"GET"})
+     */
+    public function select(RideRepository $rideRepository): Response
+    {
+        $rides = $rideRepository->findAll();
+        $select = [];
+        foreach ($rides as $ride) {
+            $select[] = $ride->getName();
+        }
+
+        return new JsonResponse(
+            $select
+        );
+    }
 }

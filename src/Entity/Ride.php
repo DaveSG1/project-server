@@ -62,6 +62,11 @@ class Ride
      */
     private $level;
 
+    /**
+     * @ORM\OneToOne(targetEntity=User::class, mappedBy="ride", cascade={"persist", "remove"})
+     */
+    private $user;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -171,6 +176,28 @@ class Ride
     public function setLevel(string $level): self
     {
         $this->level = $level;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        // unset the owning side of the relation if necessary
+        if ($user === null && $this->user !== null) {
+            $this->user->setRide(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($user !== null && $user->getRide() !== $this) {
+            $user->setRide($this);
+        }
+
+        $this->user = $user;
 
         return $this;
     }
