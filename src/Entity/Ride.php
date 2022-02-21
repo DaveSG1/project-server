@@ -63,9 +63,9 @@ class Ride
     private $level;
 
     /**
-     * @ORM\OneToOne(targetEntity=User::class, mappedBy="ride", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity=User::class, inversedBy="ride")
      */
-    private $user;
+    private $user;  /* antes era mappedBy="ride", cascade={"persist", "remove"}) */
 
     public function getId(): ?int
     {

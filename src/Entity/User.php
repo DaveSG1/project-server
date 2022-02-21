@@ -30,7 +30,7 @@ class User
     /**
      * @ORM\OneToOne(targetEntity=Ride::class, inversedBy="user", cascade={"persist", "remove"})
      */
-    private $ride;
+    private $ride;     /* no se modificó nada */
 
     public function getId(): ?int
     {
