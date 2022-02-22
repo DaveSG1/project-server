@@ -63,9 +63,13 @@ class Ride
     private $level;
 
     /**
-     * @ORM\OneToOne(targetEntity=User::class, inversedBy="ride")
+     * @ORM\OneToOne(targetEntity=User::class, inversedBy="ride", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=true)
      */
-    private $user;  /* antes era mappedBy="ride", cascade={"persist", "remove"}) */
+    private $user;
+
+
+
 
     public function getId(): ?int
     {
@@ -185,18 +189,8 @@ class Ride
         return $this->user;
     }
 
-    public function setUser(?User $user): self
+    public function setUser(User $user): self
     {
-        // unset the owning side of the relation if necessary
-        if ($user === null && $this->user !== null) {
-            $this->user->setRide(null);
-        }
-
-        // set the owning side of the relation if necessary
-        if ($user !== null && $user->getRide() !== $this) {
-            $user->setRide($this);
-        }
-
         $this->user = $user;
 
         return $this;
