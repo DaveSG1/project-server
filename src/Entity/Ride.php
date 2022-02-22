@@ -18,6 +18,11 @@ class Ride
     private $id;
 
     /**
+     * @ORM\Column(type="boolean")
+     */
+    private $active;
+
+    /**
      * @ORM\Column(type="string", length=255)
      */
     private $ccaa;
@@ -63,17 +68,32 @@ class Ride
     private $level;
 
     /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $image;
+
+    /**
      * @ORM\OneToOne(targetEntity=User::class, inversedBy="ride", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=true)
      */
     private $user;
 
 
-
-
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getActive(): ?bool
+    {
+        return $this->active;
+    }
+
+    public function setActive(bool $active): self
+    {
+        $this->active = $active;
+
+        return $this;
     }
 
     public function getCcaa(): ?string
@@ -180,6 +200,18 @@ class Ride
     public function setLevel(string $level): self
     {
         $this->level = $level;
+
+        return $this;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(?string $image): self
+    {
+        $this->image = $image;
 
         return $this;
     }

@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -24,6 +25,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $email;
 
+
+    /* Añadido después, si diera fallo eliminar de la 31 a la 34: */
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $active;
+
+
+
     /**
      * @ORM\Column(type="json")
      */
@@ -40,22 +51,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $ride;
 
-    public function getId(): ?int
+
+    /* Estas lineas de la funcion construct lo he añadido yo fijandome en el ejemplo del ejercicio Blog, si diera 
+    algún problema eliminar (lineas 58 a 61): */
+
+    public function __construct()
     {
-        return $this->id;
+        $this->rides = new ArrayCollection();
     }
 
-    public function getEmail(): ?string
-    {
-        return $this->email;
-    }
-
-    public function setEmail(string $email): self
-    {
-        $this->email = $email;
-
-        return $this;
-    }
 
     /**
      * A visual identifier that represents this user.
@@ -129,15 +133,53 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): self
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    public function getActive(): ?bool
+    {
+        return $this->active;
+    }
+
+    public function setActive(bool $active): self
+    {
+        $this->active = $active;
+
+        return $this;
+    }
+
+
+
     public function getRide(): ?Ride
     {
         return $this->ride;
     }
 
-    public function setRide(Ride $ride): self
+    public function setRide(?Ride $ride): self
     {
+
+        // unset the owning side of the relation if necessary
+        if ($ride === null && $this->ride !== null) {
+            $this->shop->setUser(null);
+        }
+
         // set the owning side of the relation if necessary
-        if ($ride->getUser() !== $this) {
+        if ($ride !== null && $ride->getUser() !== $this) {
             $ride->setUser($this);
         }
 
