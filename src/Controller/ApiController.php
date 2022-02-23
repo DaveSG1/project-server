@@ -14,6 +14,9 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ApiController extends AbstractController
 {
+
+    /* Éste endpoint por ejemplo cargará en la pagina http://localhost:8000/api/rides */
+
     /**
      * @Route("/api/rides", name="rides", methods={"GET"})
      */
@@ -35,9 +38,9 @@ class ApiController extends AbstractController
         );
     }
 
-    /* Éste endpoint es para que me devuelva la ruta que le pasemos por parámetros (al hacer click en la ruta 
-    que queramos le paso el id por parametros para que me devuelva la información de dicha ruta en concreto 
-    en la FichaPage): */
+    /* Éste endpoint es para que me devuelva la info extendida de ruta que le pasemos por parámetros 
+    (al hacer click en la ruta que queramos le paso el id por parametros para que me devuelva la información 
+    de dicha ruta en concreto en la FichaPage): */
 
     /**
      * @Route("/api/ride/{id}", name="ride", methods={"GET"}, requirements={"id": "\d+"} )
@@ -83,7 +86,10 @@ class ApiController extends AbstractController
     }
 
 
+
     /* A partir de aquí es nuevo, revisar: */
+
+
 
     /* Para añadir una entrada a la tabla Ride: */
 
@@ -94,13 +100,6 @@ class ApiController extends AbstractController
     {
         $data = json_decode($request->getContent(), true);       /* con true para que devuelva un array */
 
-        /* if($this->getUser()->getRide()){
-            return $this->json([
-                'message' => "Ride exists"
-            ],
-                Response::HTTP_FORBIDDEN
-            );
-        } */
 
         $ride = new Ride();
 
@@ -113,16 +112,82 @@ class ApiController extends AbstractController
         $ride->setDuration($data['duration']);
         $ride->setDescription($data['description']);
         $ride->setLevel($data['level']);
-        $ride->setActive(true);
-        /* insertar la imagen aqui como otro elemento o fuera? */
 
-        /* $userId = $this->getUser()->getId();
-        $ride->setUser($userRepository->find($userId)); */
+        /* insertar la imagen aqui como otro elemento o fuera? */
 
 
         $this->em->persist($ride);
         $this->em->flush();
 
-        return $this->json($ride, Response::HTTP_CREATED);
+        return new JsonResponse(
+            $ride
+        );
+    }
+
+
+    /* Para editar una entrada en concreto de la tabla Ride: */
+
+    /**
+     * @Route("/api/ride/{id}", methods={"PUT"})
+     */
+    public function update(Request $request, $id, RideRepository $rideRepository): Response
+    {
+        $content = json_decode($request->getContent(), true);
+
+        $ride = $this->rideRepository->find($id);
+
+        if (isset($content['ccaa'])) {
+            $ride->setTexto($content['ccaa']);
+        }
+        if (isset($content['name'])) {
+            $ride->setTexto($content['name']);
+        }
+        if (isset($content['location'])) {
+            $ride->setTexto($content['location']);
+        }
+        if (isset($content['address'])) {
+            $ride->setTexto($content['address']);
+        }
+        if (isset($content['telephone'])) {
+            $ride->setTexto($content['telephone']);
+        }
+        if (isset($content['email'])) {
+            $ride->setTexto($content['email']);
+        }
+        if (isset($content['duration'])) {
+            $ride->setTexto($content['duration']);
+        }
+        if (isset($content['description'])) {
+            $ride->setTexto($content['description']);
+        }
+        if (isset($content['level'])) {
+            $ride->setTexto($content['level']);
+        }
+        if (isset($content['ccaa'])) {
+            $ride->setTexto($content['ccaa']);
+        }
+
+        /* insertar la imagen aqui como otro elemento o fuera? */
+
+
+        $this->em->flush();
+
+        return new JsonResponse(['respuesta' => 'ok']);
+    }
+
+
+
+    /* Para eliminar una entrada en concreto de la tabla Ride: */
+
+    /**
+     * @Route("/api/ride/{id}", methods={"DELETE"})
+     */
+    public function delete($id): Response
+    {
+        $ride = $this->rideRepository->find($id);
+        $this->em->remove($ride);
+        $this->em->flush();
+
+        return new JsonResponse(['respuesta' => 'ok']);
     }
 }
