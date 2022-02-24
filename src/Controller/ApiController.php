@@ -18,6 +18,8 @@ class ApiController extends AbstractController
 
     /* Éste endpoint por ejemplo cargará en la pagina http://localhost:8000/api/rides */
 
+    /* Éste endpoint es para que me devuelva todas las rutas: */
+
     /**
      * @Route("/api/rides/all", name="all-rides", methods={"GET"})
      */
@@ -29,6 +31,8 @@ class ApiController extends AbstractController
             ]
         );
     }
+
+    /* Éste endpoint NO SE PARA QUÉ ES, PREGUNTAR A MIGUEL: */
 
     /**
      * @Route("/api/rides", name="rides", methods={"GET"})
@@ -42,6 +46,7 @@ class ApiController extends AbstractController
         );
     }
 
+    /* Éste endpoint es para que me devuelva las rutas de un determinado usuario: */
 
     /**
      * @Route("/api/rides/{user}", name="rides-user", methods={"GET"})

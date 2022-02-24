@@ -20,11 +20,11 @@ class RideRepository extends ServiceEntityRepository
         parent::__construct($registry, Ride::class);
     }
 
-    //ésta sería la opción para devolver todas las rutas que pertenezcan a un usuario mostrando l
+    //ésta sería la opción para devolver todas las rutas que pertenezcan a un usuario mostrando solo las que le pertenecen a ese usuario:
     public function getRidesWithSelectByUser(array $select, User $user)
     {
 
-        //select {selectParam} from ride r where r.user_id = {userid}
+        //ésto de abajo sería como hacer ésta consulta en phpmyadmin:  select {selectParam} from ride r where r.user_id = {userid}
         return $this->createQueryBuilder('r')
             ->select($select)
             ->andWhere('r.user = :user')
@@ -32,9 +32,11 @@ class RideRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    //ésta función sería para devolver todas las rutas pero filtradas por NO SE BIEN (PREGUNTAR MIGUEL):
     public function getRidesWithSelect($select)
     {
-        //select {selectParam} from ride r
+        //ésto de abajo sería como hacer ésta consulta en phpmyadmin:  select {selectParam} from ride r
 
         return $this->createQueryBuilder('r')
             ->select($select)
@@ -42,6 +44,7 @@ class RideRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    //ésta función sería para devolver todas las rutas:
     public function getRides()
     {
         return $this->createQueryBuilder('r')
@@ -49,6 +52,9 @@ class RideRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+
+
     /**            
  
      */
