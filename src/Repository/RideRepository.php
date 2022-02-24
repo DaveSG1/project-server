@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Ride;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -18,6 +19,39 @@ class RideRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Ride::class);
     }
+
+    //ésta sería la opción para devolver todas las rutas que pertenezcan a un usuario mostrando l
+    public function getRidesWithSelectByUser(array $select, User $user)
+    {
+
+        //select {selectParam} from ride r where r.user_id = {userid}
+        return $this->createQueryBuilder('r')
+            ->select($select)
+            ->andWhere('r.user = :user')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getResult();
+    }
+    public function getRidesWithSelect($select)
+    {
+        //select {selectParam} from ride r
+
+        return $this->createQueryBuilder('r')
+            ->select($select)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function getRides()
+    {
+        return $this->createQueryBuilder('r')
+            ->select(['r.id, r.name ,r.ccaa', 'r.location', 'r.level'])
+            ->getQuery()
+            ->getResult();
+    }
+    /**            
+ 
+     */
 
     // /**
     //  * @return Ride[] Returns an array of Ride objects

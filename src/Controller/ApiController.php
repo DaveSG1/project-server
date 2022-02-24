@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Ride;
+use App\Entity\User;
 use App\Repository\RideRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -18,25 +19,43 @@ class ApiController extends AbstractController
     /* Éste endpoint por ejemplo cargará en la pagina http://localhost:8000/api/rides */
 
     /**
+     * @Route("/api/rides/all", name="all-rides", methods={"GET"})
+     */
+    public function allRides(RideRepository $rideRepository): Response
+    {
+        return new JsonResponse(
+            [
+                'data' => $rideRepository->getRides()
+            ]
+        );
+    }
+
+    /**
      * @Route("/api/rides", name="rides", methods={"GET"})
      */
     public function rides(RideRepository $rideRepository): Response
     {
-        $rides = $rideRepository->findAll();
-        $response = [];
-        foreach ($rides as $ride) {
-            $response[] = [
-                'id' => $ride->getId(),
-                'name' => $ride->getName(),
-                'ccaa' => $ride->getCcaa(),
-                'location' => $ride->getLocation()
-            ];
-        }
-
         return new JsonResponse(
-            $response
+            [
+                'data' => $rideRepository->getRidesWithSelect(['r.id, r.name ,r.ccaa', 'r.location', 'r.level']),
+            ]
         );
     }
+
+
+    /**
+     * @Route("/api/rides/{user}", name="rides-user", methods={"GET"})
+     */
+    public function ridesByUser(RideRepository $rideRepository, User $user): Response
+    {
+        return new JsonResponse(
+            [
+                'data' => $rideRepository->getRidesWithSelectByUser(['r.id, r.name ,r.ccaa', 'r.location', 'r.level'], $user),
+            ]
+        );
+    }
+
+
 
     /* Éste endpoint es para que me devuelva la info extendida de ruta que le pasemos por parámetros 
     (al hacer click en la ruta que queramos le paso el id por parametros para que me devuelva la información 
