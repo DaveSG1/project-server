@@ -73,7 +73,7 @@ class Ride
     private $image;
 
     /**
-     * @ORM\OneToOne(targetEntity=User::class, inversedBy="ride", cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="ride", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=true)
      */
     private $user;
@@ -226,5 +226,21 @@ class Ride
         $this->user = $user;
 
         return $this;
+    }
+    public function toArray(): array
+    {
+        return [
+            'active' => $this->getActive(),
+            'region' => $this->getCcaa(),
+            'name' => $this->getName(),
+            'location' => $this->getLocation(),
+            'address' => $this->getAddress(),
+            'telephone' => $this->getTelephone(),
+            'email' => $this->getEmail(),
+            'description' => $this->getDescription(),
+            'duration' => $this->getDuration(),
+            'level' => $this->getLevel()
+
+        ];
     }
 }

@@ -5,7 +5,10 @@ namespace App\Repository;
 use App\Entity\Ride;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
+use Throwable;
 
 /**
  * @method Ride|null find($id, $lockMode = null, $lockVersion = null)
@@ -15,10 +18,42 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class RideRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    private $em;
+
+    public function __construct(ManagerRegistry $registry, EntityManagerInterface $entityManager)
     {
+        $this->em = $entityManager;
         parent::__construct($registry, Ride::class);
     }
+
+
+    public function createRide($data, User $user)
+    {
+        try {
+            $ride = new Ride();
+
+            $ride->setActive($data['active']);
+            $ride->setCcaa($data['ccaa']);
+            $ride->setName($data['name']);
+            $ride->setLocation($data['location']);
+            $ride->setAddress($data['address']);
+            $ride->setTelephone($data['telephone']);
+            $ride->setEmail($data['email']);
+            $ride->setDuration($data['duration']);
+            $ride->setDescription($data['description']);
+            $ride->setLevel($data['level']);
+            $ride->setUser($user);
+
+            $this->getEntityManager()->persist($ride);
+            $this->getEntityManager()->flush();
+            return true;
+        } catch (Throwable $exception) {
+            return false;
+        }
+    }
+    /* try catch si se produce una excepción en el bloque del try, entraría dentro del catch si se especifica la excepción (en este caso, si la consulta
+    falla porque recibe un tipo de datos que no corresponde para ese campo)  */
+
 
     //ésta sería la opción para devolver todas las rutas que pertenezcan a un usuario mostrando solo las que le pertenecen a ese usuario:
     public function getRidesWithSelectByUser(array $select, User $user)
@@ -33,8 +68,8 @@ class RideRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    //ésta función sería para devolver todas las rutas pero filtradas por NO SE BIEN (PREGUNTAR MIGUEL):
-    public function getRidesWithSelect($select)
+    //ésta función sería para devolver todas las rutas pero filtradas por lo que le indique en el select, por ejemplo getRides(['r.name'])(ver ApiController el endpoint read/select por ejemplo que ahí lo uso):
+    public function getRides(array $select)
     {
         //ésto de abajo sería como hacer ésta consulta en phpmyadmin:  select {selectParam} from ride r
 
@@ -44,14 +79,7 @@ class RideRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    //ésta función sería para devolver todas las rutas:
-    public function getRides()
-    {
-        return $this->createQueryBuilder('r')
-            ->select(['r.id, r.name ,r.ccaa', 'r.location', 'r.level'])
-            ->getQuery()
-            ->getResult();
-    }
+
 
 
 

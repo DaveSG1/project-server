@@ -47,7 +47,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $password;
 
     /**
-     * @ORM\OneToOne(targetEntity=Ride::class, mappedBy="user", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity=Ride::class, mappedBy="user", cascade={"persist", "remove"})
      */
     private $ride;
 
