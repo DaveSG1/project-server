@@ -20,6 +20,9 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ApiController extends AbstractController
 {
+    /* Éste endpoint es el que uso en RutasPage y me devuelve la info escueta de cada ruta (en la linea 36 digo q datos quiero traerme de la bbdd y en Ruta cual de esos datos quiero pintar)
+    cargará en la url "http://localhost:8000/api/rides/read": */
+
     /**
      * @Route("/read", name="read_rides", methods={"GET"})
      */
@@ -37,6 +40,9 @@ class ApiController extends AbstractController
     }
 
 
+    /* Éste endpoint lo usaré en el crud y me devuelve todas las rutas que gestione un determinado usuario (el que esté conectado) (en la linea 53 digo q datos quiero traerme de la bbdd y en el front diré cual de esos datos quiero pintar)
+    cargará en la url "http://localhost:8000/api/rides/read/user/{user}": */
+
     /**
      * @Route("/read/user/{user}", name="rides_shown_by_user", methods={"GET"})
      */
@@ -49,6 +55,10 @@ class ApiController extends AbstractController
         );
     }
 
+
+    /* Éste endpoint lo uso en FichaPage y me devuelve toda la info ampliada de una ruta en particular (en la linea 69 enlaza con la función toArray que he creado yo en la entidad Ride y allí digo q datos quiero traerme de la bbdd y en el front diré cual de esos datos quiero pintar)
+    cargará en la url `http://localhost:8000/api/rides/read/route/${id}` donde ${id} será el id de la ruta particular a consultar: */
+
     /**
      * @Route("/read/route/{ride}", name="show_detailed_ride", methods={"GET"})
      */
@@ -56,10 +66,14 @@ class ApiController extends AbstractController
     {
         return new JsonResponse(
             [
-                'data' => $ride->toArray(),         /* aqui llamo a la funcion toArrray que he creado yo en el modelo (entidad) Ride */
+                'data' => $ride->toArray(),         /* aqui llamo a la funcion toArray que he creado yo en el modelo (entidad) Ride que es la que devuelve todos los datos de cada ruta que contiene la bbdd */
             ]
         );
     }
+
+    /* Éste endpoint lo usaré en el crud y es para añadir una nueva ruta a la bbdd por el usuario activo 
+    cargará en la url `http://localhost:8000/api/rides/create/${id}` donde ${id} será el id del usuario activo: */
+
     /**
      * @Route("/create/{user}", name="create-ride", methods={"POST"})
      */
@@ -74,8 +88,8 @@ class ApiController extends AbstractController
         ]);
     }
 
-    /* Éste endpoint es para el formulario de reserva, para que devuelva el nombre de cada ruta para poderlo 
-    seleccionar en el desplegable: */
+    /* Éste endpoint lo uso en Reservas en el front y es para el formulario de reserva, para que devuelva el nombre de cada ruta para poderlo seleccionar en el desplegable
+    Lo cargará en la url "http://localhost:8000/api/rides/read/select": */
 
     /**
      * @Route("/read/select", name="select", methods={"GET"})

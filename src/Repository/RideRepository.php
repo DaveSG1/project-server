@@ -27,6 +27,8 @@ class RideRepository extends ServiceEntityRepository
     }
 
 
+    //ésta función es para añadir una ruta nueva un determinado usuario (el que haya iniciado sesión):
+
     public function createRide($data, User $user)
     {
         try {
@@ -51,11 +53,12 @@ class RideRepository extends ServiceEntityRepository
             return false;
         }
     }
-    /* try catch si se produce una excepción en el bloque del try, entraría dentro del catch si se especifica la excepción (en este caso, si la consulta
-    falla porque recibe un tipo de datos que no corresponde para ese campo)  */
+    /* try catch sirve para que, si se produce una excepción en el bloque del try, entraría dentro del catch donde se especifica la excepción (en este caso, si la consulta
+    falla porque recibe un tipo de datos que no corresponde para ese campo, la función createRide devolverá un false, si los datos introducidos son correctos, devolvera un true)  */
 
 
-    //ésta sería la opción para devolver todas las rutas que pertenezcan a un usuario mostrando solo las que le pertenecen a ese usuario:
+    /* Ésta función sería para devolver solo todas las rutas que pertenezcan a un usuario determinado. El select es para que en el ApiController pueda yo decirle qué datos quiero traerme
+    de la bbdd, por ejemplo si en la ApiController, pongo en getRidesWithSelectByUser(['r.id, r.name ,r.ccaa', 'r.location', 'r.level'] me traeré de la bbdd sólo id, name, ccaa, location, level : */
     public function getRidesWithSelectByUser(array $select, User $user)
     {
 
@@ -68,7 +71,9 @@ class RideRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    //ésta función sería para devolver todas las rutas pero filtradas por lo que le indique en el select, por ejemplo getRides(['r.name'])(ver ApiController el endpoint read/select por ejemplo que ahí lo uso):
+
+    /* Ésta función sería para devolver todas las rutas pero filtradas por lo que le indique en el select en cada caso en la ApiController, 
+    por ejemplo si en la ApiController, pongo en getRides(['r.name']) me traeré de la bbdd sólo los nombres de las rutas (ver ApiController el endpoint read/select por ejemplo que ahí lo uso): */
     public function getRides(array $select)
     {
         //ésto de abajo sería como hacer ésta consulta en phpmyadmin:  select {selectParam} from ride r

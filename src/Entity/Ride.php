@@ -227,11 +227,15 @@ class Ride
 
         return $this;
     }
+
+    /*     Ésta función es para que me devuelva todos los datos de cada ruta contenidos en la bbdd.
+    La creo aquí por limpieza de código, por no tener todas éstas filas en RideRepository y desde allí enlazarlo con ésto.
+       Usar ésta función es opcional */
     public function toArray(): array
     {
         return [
             'active' => $this->getActive(),
-            'region' => $this->getCcaa(),
+            'ccaa' => $this->getCcaa(),
             'name' => $this->getName(),
             'location' => $this->getLocation(),
             'address' => $this->getAddress(),
