@@ -102,8 +102,11 @@ class ApiController extends AbstractController
     }
 
 
+    /* HASTA AQUÍ ESTÁN TODOS LOS ENDPOINTS TESTADOS EN THUNDER Y FUNCIONAN */
 
-    /* ENDPOINTS NUEVOS, CORREGIR CON MIGUEL, AL INTENTAR EJECUTARLOS EN THUNDER DAN ERROR 500 DE ALGO RELACIONADO CON YAML (NO HE PODIDO IDENTIFICAR EL ERROR): */
+
+
+    /* ENDPOINTS NUEVOS, A REVISAR, AL INTENTAR EJECUTARLOS EN THUNDER DAN ERROR 500 DE ALGO RELACIONADO CON YAML (NO HE PODIDO IDENTIFICAR EL ERROR): */
 
     /* Para editar una entrada en concreto de la tabla Ride. 
     Lo cargará en la url `http://localhost:8000/api/rides/edit/${id}` donde ${id} será el id de la ruta que queramos modificar: */

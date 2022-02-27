@@ -11,6 +11,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+
+/**
+ * @Route("/api/users")
+ */
+
 class UserController extends AbstractController
 {
 
@@ -19,28 +24,53 @@ class UserController extends AbstractController
 
 
 
-    /* Aqui creamos una funcion para CONSULTAR los usuarios existentes en mi bbdd, un metodo get en esta url http://localhost/symfony2/public/index.php/api/usuario */
+    /* Aqui creamos una funcion para CONSULTAR los usuarios existentes en mi bbdd, un metodo get en esta url "http://localhost:8000/api/users/read" */
+
+
+
+    /* Éste endpoint me devuelve todos los usuarios de la bbdd 
+    cargará en la url "http://localhost:8000/api/users/read": */
 
     /**
-     * @Route("/api/users", name="users", methods={"GET"})
+     * @Route("/read", name="read_users", methods={"GET"})
      */
-    public function users(Request $request, UserRepository $userRepository): Response
+    public function allUsersAction(UserRepository $userRepository): Response
     {
+        return new JsonResponse(
+            [
+                /*  'status' => true,
+                'message' => 'TODO OK',                            ésto es la respuesta genérica, en mi caso no le estoy dando uso 
+                'timestamp' => (new DateTime())->format('y-m-d'), */
 
-        $users = $userRepository->findAll();
-        $response = [];
-        foreach ($users as $user) {
-            $response[] = [
-                'id' => $user->getId(),
-                'email' => $user->getEmail()
-            ];
-        }
+                'data' => $userRepository->getUsers(['u.id, u.email, u.active, u.roles ,u.password']),   /* y aqui los campos que quiero del $select ésto es lo realmente importante, lo que uso */
+            ]
+        );
+    }
+
+
+    /* Éste endpoint es para añadir un usuario nuevo a la bbdd, y lo usaré en el formulario de registro de nuevo usuario. 
+    Cargará en la url "http://localhost:8000/api/users/create" : */
+
+    /**
+     * @Route("/create", name="create-user", methods={"POST"})
+     */
+    public function createUserAction(Request $request, UserRepository $userRepository)
+    {
+        $data = json_decode($request->getContent(), true);
+        $status = $userRepository->createRide($data);   /* sera true o false según recibe del Riderepository (si se crea o no la entrada) */
 
         return new JsonResponse([
-            'users' => $response
+            'status' => $status,
+            'message' => $status ? "Todo ha ido ok" : "Has metido datos que no corresponden"    /* Ésto es lo que envía al front como respuesta. Si los datos introducidos has sido correctos devolvera Todo ha ido ok, si no, dira Has metido datos que no corresponden */
         ]);
     }
 
+
+
+
+
+
+    /* ÉSTOS DE ABAJO SON LOS ENDPOINTS ANTIGUOS (NO LOS ESTOY USANDO AHORA) QUE ME CREE SIGUIENDO EL EJEMPLO DEL EJERCICIO REALIZADO EN CLASE DE JOSE: */
 
 
     /* Aqui creamos una funcion para AÑADIR usuarios nuevos a mi bbdd, un metodo post en esta url http://localhost/symfony2/public/index.php/api/usuario */
