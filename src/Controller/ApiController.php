@@ -100,4 +100,76 @@ class ApiController extends AbstractController
             ['data' => $rideRepository->getRides(['r.name', 'r.id'])]
         );
     }
+
+
+
+    /* ENDPOINTS NUEVOS, CORREGIR CON MIGUEL, AL INTENTAR EJECUTARLOS EN THUNDER DAN ERROR 500 DE ALGO RELACIONADO CON YAML (NO HE PODIDO IDENTIFICAR EL ERROR): */
+
+    /* Para editar una entrada en concreto de la tabla Ride. 
+    Lo cargará en la url `http://localhost:8000/api/rides/edit/${id}` donde ${id} será el id de la ruta que queramos modificar: */
+
+    /**
+     * @Route("/edit/{id}", name='edit-ride', methods={"PUT"})
+     */
+    public function edit(Request $request, $id, RideRepository $rideRepository): Response
+    {
+        $content = json_decode($request->getContent(), true);
+
+        $ride = $this->$rideRepository->find($id);
+
+        if (isset($content['active'])) {
+            $ride->setTexto($content['active']);
+        }
+        if (isset($content['ccaa'])) {
+            $ride->setTexto($content['ccaa']);
+        }
+        if (isset($content['name'])) {
+            $ride->setTexto($content['name']);
+        }
+        if (isset($content['location'])) {
+            $ride->setTexto($content['location']);
+        }
+        if (isset($content['address'])) {
+            $ride->setTexto($content['address']);
+        }
+        if (isset($content['telephone'])) {
+            $ride->setTexto($content['telephone']);
+        }
+        if (isset($content['email'])) {
+            $ride->setTexto($content['email']);
+        }
+        if (isset($content['description'])) {
+            $ride->setTexto($content['description']);
+        }
+        if (isset($content['duration'])) {
+            $ride->setTexto($content['duration']);
+        }
+        if (isset($content['level'])) {
+            $ride->setTexto($content['level']);
+        }
+
+        /* insertar la imagen aqui como otro elemento o fuera? */
+
+
+        $this->em->flush();
+
+        return new JsonResponse(['respuesta' => 'ok']);
+    }
+
+
+
+    /* Para eliminar una entrada en concreto de la tabla Ride. 
+    Lo cargará en la url `http://localhost:8000/api/rides/delete/${id}` donde ${id} será el id de la ruta que queramos eliminar: */
+
+    /**
+     * @Route("/delete/{id}", name='delete-ride', methods={"DELETE"})
+     */
+    public function delete($id): Response
+    {
+        $ride = $this->rideRepository->find($id);
+        $this->em->remove($ride);
+        $this->em->flush();
+
+        return new JsonResponse(['respuesta' => 'ok']);
+    }
 }
