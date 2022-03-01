@@ -26,10 +26,9 @@ class RideRepository extends ServiceEntityRepository
         parent::__construct($registry, Ride::class);
     }
 
-
     //ésta función es para añadir una ruta nueva un determinado usuario (el que haya iniciado sesión):
 
-    public function createRide($data, User $user)
+    public function createRide(array $data, User $user)
     {
         try {
             $ride = new Ride();
@@ -85,12 +84,43 @@ class RideRepository extends ServiceEntityRepository
     }
 
 
+    public function editRide(array $data, Ride $ride): bool
+    {
+        try {
+
+            if (isset($data['active'])) {
+                $ride->setActive($data['active']);
+            }
+
+            /* modificar el resto de campos cada uno con su isset */
+
+            $ride->setCcaa($data['ccaa']);
+            $ride->setName($data['name']);
+            $ride->setLocation($data['location']);
+            $ride->setAddress($data['address']);
+            $ride->setTelephone($data['telephone']);
+            $ride->setEmail($data['email']);
+            $ride->setDuration($data['duration']);
+            $ride->setDescription($data['description']);
+            $ride->setLevel($data['level']);
+            //$ride->setUser($user);
+
+
+            $this->getEntityManager()->persist($ride);
+            $this->getEntityManager()->flush();
+            return true;
+        } catch (Throwable $exception) {
+            return false;
+        }
+    }
+}
 
 
 
-    /**            
+
+/**            
  
-     */
+ */
 
     // /**
     //  * @return Ride[] Returns an array of Ride objects
@@ -120,4 +150,3 @@ class RideRepository extends ServiceEntityRepository
         ;
     }
     */
-}

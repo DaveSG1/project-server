@@ -20,13 +20,20 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ApiController extends AbstractController
 {
+    private $rideRepository;
+
+    public function __construct(RideRepository $rideRepository)
+    {
+        $this->rideRepository = $rideRepository;
+    }
+
     /* Éste endpoint es el que uso en RutasPage y me devuelve la info escueta de cada ruta (en la linea 36 digo q datos quiero traerme de la bbdd y en Ruta cual de esos datos quiero pintar)
     cargará en la url "http://localhost:8000/api/rides/read": */
 
     /**
      * @Route("/read", name="read_rides", methods={"GET"})
      */
-    public function allRidesAction(RideRepository $rideRepository): Response
+    public function allRidesAction(): Response
     {
         return new JsonResponse(
             [
@@ -34,7 +41,7 @@ class ApiController extends AbstractController
                 'message' => 'TODO OK',                            ésto es la respuesta genérica, en mi caso no le estoy dando uso 
                 'timestamp' => (new DateTime())->format('y-m-d'), */
 
-                'data' => $rideRepository->getRides(['r.id, r.name ,r.ccaa', 'r.location']),   /* y aqui los campos que quiero del $select ésto es lo realmente importante, lo que uso */
+                'data' => $this->rideRepository->getRides(['r.id, r.name ,r.ccaa', 'r.location']),   /* y aqui los campos que quiero del $select ésto es lo realmente importante, lo que uso */
             ]
         );
     }
@@ -46,11 +53,11 @@ class ApiController extends AbstractController
     /**
      * @Route("/read/user/{user}", name="rides_shown_by_user", methods={"GET"})
      */
-    public function ridesByUserAction(RideRepository $rideRepository, User $user): Response
+    public function ridesByUserAction(User $user): Response
     {
         return new JsonResponse(
             [
-                'data' => $rideRepository->getRidesWithSelectByUser(['r.id, r.name ,r.ccaa', 'r.location', 'r.level'], $user),
+                'data' => $this->rideRepository->getRidesWithSelectByUser(['r.id, r.name ,r.ccaa', 'r.location', 'r.level'], $user),
             ]
         );
     }
@@ -77,10 +84,10 @@ class ApiController extends AbstractController
     /**
      * @Route("/create/{user}", name="create-ride", methods={"POST"})
      */
-    public function createAction(Request $request, RideRepository $rideRepository, User $user)
+    public function createAction(Request $request, User $user)
     {
         $data = json_decode($request->getContent(), true);
-        $status = $rideRepository->createRide($data, $user);   /* sera true o false según recibe del Riderepository (si se crea o no la entrada) */
+        $status = $this->rideRepository->createRide($data, $user);   /* sera true o false según recibe del Riderepository (si se crea o no la entrada) */
 
         return new JsonResponse([
             'status' => $status,
@@ -94,10 +101,10 @@ class ApiController extends AbstractController
     /**
      * @Route("/read/select", name="select", methods={"GET"})
      */
-    public function select(RideRepository $rideRepository): Response
+    public function selectAction(): Response
     {
         return new JsonResponse(
-            ['data' => $rideRepository->getRides(['r.name', 'r.id'])]
+            ['data' => $this->rideRepository->getRides(['r.name', 'r.id'])]
         );
     }
 
@@ -111,50 +118,18 @@ class ApiController extends AbstractController
     /* Para editar una entrada en concreto de la tabla Ride. 
     Lo cargará en la url `http://localhost:8000/api/rides/edit/${id}` donde ${id} será el id de la ruta que queramos modificar: */
 
+
     /**
-     * @Route("/edit/{id}", name='edit-ride', methods={"PUT"})
+     * @Route("/edit/{ride}", name="edit-ride", methods={"PUT"})
      */
-    public function edit(Request $request, $id, RideRepository $rideRepository): Response
+    public function editAction(Ride $ride, Request $request): Response
     {
-        $content = json_decode($request->getContent(), true);
+        /*   {"active": 1, "ccaa" : "Malaga", "name": "Ruta prueba try catch", "location": "Malaga", "address" : "Calle de la academia pepito 21 B", "telephone": "123456789", "email": "miguel@sancoz.com", "description": "para que quieres saber eso hehe salu2", "duration" : "hola", "level" : "dificil"
+        } */
 
-        $ride = $this->$rideRepository->find($id);
+        $data = json_decode($request->getContent(), true);
+        $this->rideRepository->editRide($data, $ride);
 
-        if (isset($content['active'])) {
-            $ride->setTexto($content['active']);
-        }
-        if (isset($content['ccaa'])) {
-            $ride->setTexto($content['ccaa']);
-        }
-        if (isset($content['name'])) {
-            $ride->setTexto($content['name']);
-        }
-        if (isset($content['location'])) {
-            $ride->setTexto($content['location']);
-        }
-        if (isset($content['address'])) {
-            $ride->setTexto($content['address']);
-        }
-        if (isset($content['telephone'])) {
-            $ride->setTexto($content['telephone']);
-        }
-        if (isset($content['email'])) {
-            $ride->setTexto($content['email']);
-        }
-        if (isset($content['description'])) {
-            $ride->setTexto($content['description']);
-        }
-        if (isset($content['duration'])) {
-            $ride->setTexto($content['duration']);
-        }
-        if (isset($content['level'])) {
-            $ride->setTexto($content['level']);
-        }
-
-        /* insertar la imagen aqui como otro elemento o fuera? */
-
-
-        $this->em->flush();
 
         return new JsonResponse(['respuesta' => 'ok']);
     }
@@ -165,11 +140,10 @@ class ApiController extends AbstractController
     Lo cargará en la url `http://localhost:8000/api/rides/delete/${id}` donde ${id} será el id de la ruta que queramos eliminar: */
 
     /**
-     * @Route("/delete/{id}", name='delete-ride', methods={"DELETE"})
+     * @Route("/delete/{ride}", name="delete-ride", methods={"DELETE"})
      */
-    public function delete($id): Response
+    public function deleteAction(Ride $ride): Response
     {
-        $ride = $this->rideRepository->find($id);
         $this->em->remove($ride);
         $this->em->flush();
 
