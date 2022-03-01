@@ -12,6 +12,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 
+/* Todo es nuevo, revisar: */
+
+
 /**
  * @Route("/api/users")
  */
@@ -19,9 +22,12 @@ use Symfony\Component\Routing\Annotation\Route;
 class UserController extends AbstractController
 {
 
+    private $userRepository;
 
-    /* Todo es nuevo, revisar: */
-
+    public function __construct(UserRepository $userRepository)
+    {
+        $this->userRepository = $userRepository;
+    }
 
 
     /* Aqui creamos una funcion para CONSULTAR los usuarios existentes en mi bbdd, un metodo get en esta url "http://localhost:8000/api/users/read" */
@@ -34,7 +40,7 @@ class UserController extends AbstractController
     /**
      * @Route("/read", name="read_users", methods={"GET"})
      */
-    public function allUsersAction(UserRepository $userRepository): Response
+    public function allUsersAction(): Response
     {
         return new JsonResponse(
             [
@@ -42,7 +48,7 @@ class UserController extends AbstractController
                 'message' => 'TODO OK',                            ésto es la respuesta genérica, en mi caso no le estoy dando uso 
                 'timestamp' => (new DateTime())->format('y-m-d'), */
 
-                'data' => $userRepository->getUsers(['u.id, u.email, u.active, u.roles ,u.password']),   /* y aqui los campos que quiero del $select ésto es lo realmente importante, lo que uso */
+                'data' => $this->userRepository->getUsers(['u.id, u.email, u.active, u.roles ,u.password']),   /* y aqui los campos que quiero del $select ésto es lo realmente importante, lo que uso */
             ]
         );
     }
@@ -54,10 +60,10 @@ class UserController extends AbstractController
     /**
      * @Route("/create", name="create-user", methods={"POST"})
      */
-    public function createUserAction(Request $request, UserRepository $userRepository)
+    public function createUserAction(Request $request)
     {
         $data = json_decode($request->getContent(), true);
-        $status = $userRepository->createRide($data);   /* sera true o false según recibe del Riderepository (si se crea o no la entrada) */
+        $status = $this->userRepository->createUser($data);   /* sera true o false según recibe del userrepository (si se crea o no la entrada) */
 
         return new JsonResponse([
             'status' => $status,

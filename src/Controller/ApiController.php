@@ -113,40 +113,41 @@ class ApiController extends AbstractController
 
 
 
-    /* ENDPOINTS NUEVOS, A REVISAR, AL INTENTAR EJECUTARLOS EN THUNDER DAN ERROR 500 DE ALGO RELACIONADO CON YAML (NO HE PODIDO IDENTIFICAR EL ERROR): */
+    /* ENDPOINTS NUEVOS, A REVISAR: */
+
 
     /* Para editar una entrada en concreto de la tabla Ride. 
-    Lo cargará en la url `http://localhost:8000/api/rides/edit/${id}` donde ${id} será el id de la ruta que queramos modificar: */
-
+    Lo cargará en la url `http://localhost:8000/api/rides/edit/${ride}` donde ${ride} será el id de la ruta que queramos modificar: */
 
     /**
      * @Route("/edit/{ride}", name="edit-ride", methods={"PUT"})
      */
     public function editAction(Ride $ride, Request $request): Response
     {
-        /*   {"active": 1, "ccaa" : "Malaga", "name": "Ruta prueba try catch", "location": "Malaga", "address" : "Calle de la academia pepito 21 B", "telephone": "123456789", "email": "miguel@sancoz.com", "description": "para que quieres saber eso hehe salu2", "duration" : "hola", "level" : "dificil"
-        } */
-
         $data = json_decode($request->getContent(), true);
         $this->rideRepository->editRide($data, $ride);
-
 
         return new JsonResponse(['respuesta' => 'ok']);
     }
 
 
 
+    /* REVISAR SI ESTÁ BIEN: */
+
+
     /* Para eliminar una entrada en concreto de la tabla Ride. 
-    Lo cargará en la url `http://localhost:8000/api/rides/delete/${id}` donde ${id} será el id de la ruta que queramos eliminar: */
+    Lo cargará en la url `http://localhost:8000/api/rides/delete/${ride}` donde ${ride} será el id de la ruta que queramos eliminar: */
 
     /**
      * @Route("/delete/{ride}", name="delete-ride", methods={"DELETE"})
      */
     public function deleteAction(Ride $ride): Response
     {
-        $this->em->remove($ride);
-        $this->em->flush();
 
-        return new JsonResponse(['respuesta' => 'ok']);
+        $this->rideRepository->deleteRide($ride);
+
+        return new JsonResponse(
+            ['respuesta' => 'ok']
+        );
     }
 }

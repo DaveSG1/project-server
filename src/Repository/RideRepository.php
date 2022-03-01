@@ -58,6 +58,7 @@ class RideRepository extends ServiceEntityRepository
 
     /* Ésta función sería para devolver solo todas las rutas que pertenezcan a un usuario determinado. El select es para que en el ApiController pueda yo decirle qué datos quiero traerme
     de la bbdd, por ejemplo si en la ApiController, pongo en getRidesWithSelectByUser(['r.id, r.name ,r.ccaa', 'r.location', 'r.level'] me traeré de la bbdd sólo id, name, ccaa, location, level : */
+
     public function getRidesWithSelectByUser(array $select, User $user)
     {
 
@@ -73,6 +74,7 @@ class RideRepository extends ServiceEntityRepository
 
     /* Ésta función sería para devolver todas las rutas pero filtradas por lo que le indique en el select en cada caso en la ApiController, 
     por ejemplo si en la ApiController, pongo en getRides(['r.name']) me traeré de la bbdd sólo los nombres de las rutas (ver ApiController el endpoint read/select por ejemplo que ahí lo uso): */
+
     public function getRides(array $select)
     {
         //ésto de abajo sería como hacer ésta consulta en phpmyadmin:  select {selectParam} from ride r
@@ -83,6 +85,7 @@ class RideRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    /* Ésta función sería para editar una Ruta concreta: */
 
     public function editRide(array $data, Ride $ride): bool
     {
@@ -92,17 +95,46 @@ class RideRepository extends ServiceEntityRepository
                 $ride->setActive($data['active']);
             }
 
-            /* modificar el resto de campos cada uno con su isset */
+            if (isset($data['ccaa'])) {
+                $ride->setCcaa($data['ccaa']);
+            }
 
-            $ride->setCcaa($data['ccaa']);
-            $ride->setName($data['name']);
-            $ride->setLocation($data['location']);
-            $ride->setAddress($data['address']);
-            $ride->setTelephone($data['telephone']);
-            $ride->setEmail($data['email']);
-            $ride->setDuration($data['duration']);
-            $ride->setDescription($data['description']);
-            $ride->setLevel($data['level']);
+            if (isset($data['name'])) {
+                $ride->setName($data['name']);
+            }
+
+            if (isset($data['location'])) {
+                $ride->setLocation($data['location']);
+            }
+
+            if (isset($data['address'])) {
+                $ride->setAddress($data['address']);
+            }
+
+            if (isset($data['telephone'])) {
+                $ride->setTelephone($data['telephone']);
+            }
+
+            if (isset($data['email'])) {
+                $ride->setEmail($data['email']);
+            }
+
+            if (isset($data['duration'])) {
+                $ride->setDuration($data['duration']);
+            }
+
+            if (isset($data['description'])) {
+                $ride->setDescription($data['description']);
+            }
+
+            if (isset($data['level'])) {
+                $ride->setLevel($data['level']);
+            }
+
+            /* if (isset($data['image'])) {
+                $ride->setImage($data['image']);
+            } */
+
             //$ride->setUser($user);
 
 
@@ -112,6 +144,15 @@ class RideRepository extends ServiceEntityRepository
         } catch (Throwable $exception) {
             return false;
         }
+    }
+
+
+    /* REVISAR SI ESTÁ BIEN: */
+
+    public function deleteRide(Ride $ride)
+    {
+        $this->em->remove($ride);
+        $this->em->flush();
     }
 }
 
