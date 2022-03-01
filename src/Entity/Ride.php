@@ -228,9 +228,9 @@ class Ride
         return $this;
     }
 
-    /*     Ésta función es para que me devuelva todos los datos de cada ruta contenidos en la bbdd.
-    La creo aquí por limpieza de código, por no tener todas éstas filas en RideRepository y desde allí enlazarlo con ésto.
-       Usar ésta función es opcional */
+    /*     Ésta función es para que me devuelva todos los datos de cada ruta contenidos en la bbdd. La uso en ApiController en la función getRouteAction.
+    La creo aquí por limpieza de código, por no tener todas éstas filas en RideRepository y desde allí enlazarlo con ésto: */
+
     public function toArray(): array
     {
         return [
@@ -244,7 +244,6 @@ class Ride
             'description' => $this->getDescription(),
             'duration' => $this->getDuration(),
             'level' => $this->getLevel()
-
         ];
     }
 }

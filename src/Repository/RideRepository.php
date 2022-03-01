@@ -26,7 +26,38 @@ class RideRepository extends ServiceEntityRepository
         parent::__construct($registry, Ride::class);
     }
 
-    //ésta función es para añadir una ruta nueva un determinado usuario (el que haya iniciado sesión):
+
+    /* Ésta función sería para devolver todas las rutas pero filtradas por lo que le indique en el select en cada caso en la ApiController, 
+    por ejemplo si en la ApiController, pongo en getRides(['r.name']) me traeré de la bbdd sólo los nombres de las rutas (ver ApiController el endpoint read/select por ejemplo que ahí lo uso): */
+
+    public function getRides(array $select)
+    {
+        //ésto de abajo sería como hacer ésta consulta en phpmyadmin:  select {selectParam} from ride r
+
+        return $this->createQueryBuilder('r')
+            ->select($select)
+            ->getQuery()
+            ->getResult();
+    }
+
+
+    /* Ésta función sería para devolver sólo todas las rutas que pertenezcan a un usuario determinado. El select es para que en el ApiController pueda yo decirle qué datos quiero traerme
+    de la bbdd, por ejemplo si en la ApiController, pongo en getRidesWithSelectByUser(['r.id, r.name ,r.ccaa', 'r.location', 'r.level'] me traeré de la bbdd sólo id, name, ccaa, location, level : */
+
+    public function getRidesWithSelectByUser(array $select, User $user)
+    {
+
+        //ésto de abajo sería como hacer ésta consulta en phpmyadmin:  select {selectParam} from ride r where r.user_id = {userid}
+        return $this->createQueryBuilder('r')
+            ->select($select)
+            ->andWhere('r.user = :user')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getResult();
+    }
+
+
+    //Ésta función es para añadir una ruta nueva un determinado usuario (el que haya iniciado sesión):
 
     public function createRide(array $data, User $user)
     {
@@ -56,34 +87,7 @@ class RideRepository extends ServiceEntityRepository
     falla porque recibe un tipo de datos que no corresponde para ese campo, la función createRide devolverá un false, si los datos introducidos son correctos, devolvera un true)  */
 
 
-    /* Ésta función sería para devolver solo todas las rutas que pertenezcan a un usuario determinado. El select es para que en el ApiController pueda yo decirle qué datos quiero traerme
-    de la bbdd, por ejemplo si en la ApiController, pongo en getRidesWithSelectByUser(['r.id, r.name ,r.ccaa', 'r.location', 'r.level'] me traeré de la bbdd sólo id, name, ccaa, location, level : */
 
-    public function getRidesWithSelectByUser(array $select, User $user)
-    {
-
-        //ésto de abajo sería como hacer ésta consulta en phpmyadmin:  select {selectParam} from ride r where r.user_id = {userid}
-        return $this->createQueryBuilder('r')
-            ->select($select)
-            ->andWhere('r.user = :user')
-            ->setParameter('user', $user)
-            ->getQuery()
-            ->getResult();
-    }
-
-
-    /* Ésta función sería para devolver todas las rutas pero filtradas por lo que le indique en el select en cada caso en la ApiController, 
-    por ejemplo si en la ApiController, pongo en getRides(['r.name']) me traeré de la bbdd sólo los nombres de las rutas (ver ApiController el endpoint read/select por ejemplo que ahí lo uso): */
-
-    public function getRides(array $select)
-    {
-        //ésto de abajo sería como hacer ésta consulta en phpmyadmin:  select {selectParam} from ride r
-
-        return $this->createQueryBuilder('r')
-            ->select($select)
-            ->getQuery()
-            ->getResult();
-    }
 
     /* Ésta función sería para editar una Ruta concreta: */
 
@@ -148,6 +152,8 @@ class RideRepository extends ServiceEntityRepository
 
 
     /* REVISAR SI ESTÁ BIEN: */
+
+    /* Ésta función sería para eliminar una Ruta concreta: */
 
     public function deleteRide(Ride $ride)
     {

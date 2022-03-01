@@ -82,7 +82,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     }
 
 
-    //Ésta función es para añadir un usuario nuevo:
+    /* Ésta función es para añadir un usuario nuevo: */
 
     public function createUser($data)
     {

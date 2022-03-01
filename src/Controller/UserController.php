@@ -35,7 +35,7 @@ class UserController extends AbstractController
 
 
     /* Éste endpoint me devuelve todos los usuarios de la bbdd 
-    cargará en la url "http://localhost:8000/api/users/read": */
+    Cargará en la url "http://localhost:8000/api/users/read": */
 
     /**
      * @Route("/read", name="read_users", methods={"GET"})

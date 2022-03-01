@@ -78,6 +78,21 @@ class ApiController extends AbstractController
         );
     }
 
+
+    /* Éste endpoint lo uso en Reservas en el front y es para el formulario de reserva, para que devuelva el nombre de cada ruta para poderlo seleccionar en el desplegable
+    Lo cargará en la url "http://localhost:8000/api/rides/read/select": */
+
+    /**
+     * @Route("/read/select", name="select", methods={"GET"})
+     */
+    public function selectAction(): Response
+    {
+        return new JsonResponse(
+            ['data' => $this->rideRepository->getRides(['r.name', 'r.id'])]
+        );
+    }
+
+
     /* Éste endpoint lo usaré en el crud y es para añadir una nueva ruta a la bbdd por el usuario activo 
     cargará en la url `http://localhost:8000/api/rides/create/${id}` donde ${id} será el id del usuario activo: */
 
@@ -95,18 +110,6 @@ class ApiController extends AbstractController
         ]);
     }
 
-    /* Éste endpoint lo uso en Reservas en el front y es para el formulario de reserva, para que devuelva el nombre de cada ruta para poderlo seleccionar en el desplegable
-    Lo cargará en la url "http://localhost:8000/api/rides/read/select": */
-
-    /**
-     * @Route("/read/select", name="select", methods={"GET"})
-     */
-    public function selectAction(): Response
-    {
-        return new JsonResponse(
-            ['data' => $this->rideRepository->getRides(['r.name', 'r.id'])]
-        );
-    }
 
 
     /* HASTA AQUÍ ESTÁN TODOS LOS ENDPOINTS TESTADOS EN THUNDER Y FUNCIONAN */
@@ -116,7 +119,7 @@ class ApiController extends AbstractController
     /* ENDPOINTS NUEVOS, A REVISAR: */
 
 
-    /* Para editar una entrada en concreto de la tabla Ride. 
+    /* Éste endpoint es para editar una entrada en concreto de la tabla Ride. 
     Lo cargará en la url `http://localhost:8000/api/rides/edit/${ride}` donde ${ride} será el id de la ruta que queramos modificar: */
 
     /**
@@ -132,10 +135,7 @@ class ApiController extends AbstractController
 
 
 
-    /* REVISAR SI ESTÁ BIEN: */
-
-
-    /* Para eliminar una entrada en concreto de la tabla Ride. 
+    /* Éste endpoint es para eliminar una entrada en concreto de la tabla Ride. 
     Lo cargará en la url `http://localhost:8000/api/rides/delete/${ride}` donde ${ride} será el id de la ruta que queramos eliminar: */
 
     /**
