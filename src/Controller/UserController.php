@@ -48,7 +48,7 @@ class UserController extends AbstractController
                 'message' => 'TODO OK',                            ésto es la respuesta genérica, en mi caso no le estoy dando uso 
                 'timestamp' => (new DateTime())->format('y-m-d'), */
 
-                'data' => $this->userRepository->getUsers(['u.id, u.email, u.active, u.roles ,u.password']),   /* y aqui los campos que quiero del $select ésto es lo realmente importante, lo que uso */
+                'data' => $this->userRepository->getUsers(['u.email, u.active']),   /* y aqui los campos que quiero del $select ésto es lo realmente importante, lo que uso */
             ]
         );
     }

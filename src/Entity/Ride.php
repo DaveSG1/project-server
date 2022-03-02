@@ -48,11 +48,6 @@ class Ride
     private $telephone;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $email;
-
-    /**
      * @ORM\Column(type="integer")
      */
     private $duration;
@@ -73,7 +68,7 @@ class Ride
     private $image;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="ride", cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="ride", cascade={"persist", "remove"}, fetch="EAGER")
      * @ORM\JoinColumn(nullable=true)
      */
     private $user;
@@ -156,18 +151,6 @@ class Ride
         return $this;
     }
 
-    public function getEmail(): ?string
-    {
-        return $this->email;
-    }
-
-    public function setEmail(string $email): self
-    {
-        $this->email = $email;
-
-        return $this;
-    }
-
     public function getDuration(): ?int
     {
         return $this->duration;
@@ -240,7 +223,6 @@ class Ride
             'location' => $this->getLocation(),
             'address' => $this->getAddress(),
             'telephone' => $this->getTelephone(),
-            'email' => $this->getEmail(),
             'description' => $this->getDescription(),
             'duration' => $this->getDuration(),
             'level' => $this->getLevel()

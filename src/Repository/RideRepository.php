@@ -70,7 +70,6 @@ class RideRepository extends ServiceEntityRepository
             $ride->setLocation($data['location']);
             $ride->setAddress($data['address']);
             $ride->setTelephone($data['telephone']);
-            $ride->setEmail($data['email']);
             $ride->setDuration($data['duration']);
             $ride->setDescription($data['description']);
             $ride->setLevel($data['level']);
@@ -119,10 +118,6 @@ class RideRepository extends ServiceEntityRepository
                 $ride->setTelephone($data['telephone']);
             }
 
-            if (isset($data['email'])) {
-                $ride->setEmail($data['email']);
-            }
-
             if (isset($data['duration'])) {
                 $ride->setDuration($data['duration']);
             }
@@ -151,16 +146,34 @@ class RideRepository extends ServiceEntityRepository
     }
 
 
-    /* REVISAR SI ESTÁ BIEN: */
-
     /* Ésta función sería para eliminar una Ruta concreta: */
 
-    public function deleteRide(Ride $ride)
+    public function deleteRide(Ride $ride): bool
     {
-        $this->em->remove($ride);
-        $this->em->flush();
+        try {
+            $this->em->remove($ride);
+            $this->em->flush();
+            return true;
+        } catch (Throwable $exception) {
+            return false;
+        }
+    }
+
+    /* Ésta función será para conectar ambas tablas para cargar el email de la tabla user en la tabla ride: */
+
+    public function getRideWithUser(Ride $ride)
+    {
+        //ésto de abajo sería como hacer ésta consulta en phpmyadmin:  select * from ride r where r.id = (id de la ruta p.ej 2)
+        return $this->createQueryBuilder('r')
+            ->select(["r", "u"])
+            ->andWhere('r.id = :id')
+            ->join("r.user", "u", "u.id = r.user_id")
+            ->setParameter('id', $ride->getId())
+            ->getQuery()
+            ->getArrayResult();
     }
 }
+
 
 
 

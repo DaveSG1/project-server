@@ -72,9 +72,7 @@ class ApiController extends AbstractController
     public function getRouteAction(Ride $ride): Response
     {
         return new JsonResponse(
-            [
-                'data' => $ride->toArray(),         /* aqui llamo a la funcion toArray que he creado yo en el modelo (entidad) Ride que es la que devuelve todos los datos de cada ruta que contiene la bbdd */
-            ]
+            ['data' => $this->rideRepository->getRideWithUser($ride)]
         );
     }
 
@@ -99,7 +97,7 @@ class ApiController extends AbstractController
     /**
      * @Route("/create/{user}", name="create-ride", methods={"POST"})
      */
-    public function createAction(Request $request, User $user)
+    public function createAction(Request $request, User $user): Response
     {
         $data = json_decode($request->getContent(), true);
         $status = $this->rideRepository->createRide($data, $user);   /* sera true o false según recibe del Riderepository (si se crea o no la entrada) */
@@ -130,7 +128,7 @@ class ApiController extends AbstractController
         $data = json_decode($request->getContent(), true);
         $this->rideRepository->editRide($data, $ride);
 
-        return new JsonResponse(['respuesta' => 'ok']);
+        return new JsonResponse(['status' => true]);
     }
 
 
@@ -143,11 +141,8 @@ class ApiController extends AbstractController
      */
     public function deleteAction(Ride $ride): Response
     {
-
-        $this->rideRepository->deleteRide($ride);
-
         return new JsonResponse(
-            ['respuesta' => 'ok']
+            ['status' => $this->rideRepository->deleteRide($ride)]
         );
     }
 }
