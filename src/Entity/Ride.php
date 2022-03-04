@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\RideRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -72,6 +74,16 @@ class Ride
      * @ORM\JoinColumn(nullable=true)
      */
     private $user;
+
+    /**
+     * @ORM\OneToMany(targetEntity=RideAvailability::class, mappedBy="ride")
+     */
+    private $rideAvailabilities;
+
+    public function __construct()
+    {
+        $this->rideAvailabilities = new ArrayCollection();
+    }
 
 
     public function getId(): ?int
@@ -227,5 +239,35 @@ class Ride
             'duration' => $this->getDuration(),
             'level' => $this->getLevel()
         ];
+    }
+
+    /**
+     * @return Collection<int, RideAvailability>
+     */
+    public function getRideAvailabilities(): Collection
+    {
+        return $this->rideAvailabilities;
+    }
+
+    public function addRideAvailability(RideAvailability $rideAvailability): self
+    {
+        if (!$this->rideAvailabilities->contains($rideAvailability)) {
+            $this->rideAvailabilities[] = $rideAvailability;
+            $rideAvailability->setRide($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRideAvailability(RideAvailability $rideAvailability): self
+    {
+        if ($this->rideAvailabilities->removeElement($rideAvailability)) {
+            // set the owning side to null (unless already changed)
+            if ($rideAvailability->getRide() === $this) {
+                $rideAvailability->setRide(null);
+            }
+        }
+
+        return $this;
     }
 }

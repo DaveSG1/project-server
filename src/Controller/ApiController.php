@@ -77,16 +77,16 @@ class ApiController extends AbstractController
     }
 
 
-    /* Éste endpoint lo uso en Reservas en el front y es para el formulario de reserva, para que devuelva el nombre de cada ruta para poderlo seleccionar en el desplegable
-    Lo cargará en la url "http://localhost:8000/api/rides/read/select": */
+    /* Éste endpoint lo uso en Reservas en el front y es para el formulario de reserva, para que devuelva las fechas disponibles para una ruta
+    Lo cargará en la url "http://localhost:8000/api/rides/read/booking/see/{ride}": */
 
     /**
-     * @Route("/read/select", name="select", methods={"GET"})
+     * @Route("/read/booking/see/{ride}", name="read-booking", methods={"GET"})
      */
-    public function selectAction(): Response
+    public function seeBookingAvailabilityAction(Ride $ride): Response
     {
         return new JsonResponse(
-            ['data' => $this->rideRepository->getRides(['r.name', 'r.id'])]
+            ['data' => $this->rideRepository->getRideWithAvailability($ride)]
         );
     }
 

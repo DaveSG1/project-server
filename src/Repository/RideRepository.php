@@ -41,6 +41,40 @@ class RideRepository extends ServiceEntityRepository
     }
 
 
+    /* Ésta función sería para devolver todas las rutas pero filtradas por lo que le indique en el select en cada caso en la ApiController, 
+    por ejemplo si en la ApiController, pongo en getRides(['r.name']) me traeré de la bbdd sólo los nombres de las rutas (ver ApiController el endpoint read/select por ejemplo que ahí lo uso): */
+
+    public function getRideWithAvailability(Ride $ride)
+    {
+        $query = $this->createQueryBuilder('r')
+            ->select(["r", "a"])
+            ->andWhere('r.id = :id')
+            ->setParameter('id', $ride->getId())
+            ->leftJoin("r.rideAvailabilities", "a", "a.ride_id = r.id")
+            ->getQuery()
+            ->getArrayResult();
+
+        foreach ($query as &$ride) {
+            foreach ($ride['rideAvailabilities'] as &$rideAvailabilities) {
+                $date = $rideAvailabilities["date"];
+                $date_formatted = $date->format('d-m-Y');
+
+                $time = $rideAvailabilities["time"];
+                $time_formatted = $time->format('H:i');
+
+                $date_time = $date_formatted . " " . $time_formatted;
+
+                unset($rideAvailabilities["time"]);
+                unset($rideAvailabilities["date"]);
+
+                $rideAvailabilities["datetime"] = $date_time;
+            }
+        }
+
+        return $query;
+    }
+
+
     /* Ésta función sería para devolver sólo todas las rutas que pertenezcan a un usuario determinado. El select es para que en el ApiController pueda yo decirle qué datos quiero traerme
     de la bbdd, por ejemplo si en la ApiController, pongo en getRidesWithSelectByUser(['r.id, r.name ,r.ccaa', 'r.location', 'r.level'] me traeré de la bbdd sólo id, name, ccaa, location, level : */
 
