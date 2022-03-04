@@ -41,8 +41,7 @@ class RideRepository extends ServiceEntityRepository
     }
 
 
-    /* Ésta función sería para devolver todas las rutas pero filtradas por lo que le indique en el select en cada caso en la ApiController, 
-    por ejemplo si en la ApiController, pongo en getRides(['r.name']) me traeré de la bbdd sólo los nombres de las rutas (ver ApiController el endpoint read/select por ejemplo que ahí lo uso): */
+    /* Ésta función sería para devolver todas las rutas pero añadiendo la disponibilidad de fecha y hora de cada una de esas rutas: */
 
     public function getRideWithAvailability(Ride $ride)
     {

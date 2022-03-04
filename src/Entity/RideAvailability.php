@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\RideAvailabilityRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -32,6 +34,8 @@ class RideAvailability
      * @ORM\Column(type="time")
      */
     private $time;
+
+
 
     public function getId(): ?int
     {

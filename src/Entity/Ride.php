@@ -80,10 +80,6 @@ class Ride
      */
     private $rideAvailabilities;
 
-    public function __construct()
-    {
-        $this->rideAvailabilities = new ArrayCollection();
-    }
 
 
     public function getId(): ?int
