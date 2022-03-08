@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
+use Lexik\Bundle\JWTAuthenticationBundle\Security\Authenticator\JWTAuthenticator;
+use Lexik\Bundle\JWTAuthenticationBundle\Security\Authenticator\Token\JWTPostAuthenticationToken;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request as HttpFoundationRequest;
@@ -12,33 +14,25 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
 
-/**
- * @Route("/auth")
- */
+
 class AuthController extends AbstractController
 {
+    private $userRepository;
 
-    /* ENDPOINT NUEVO A REVISAR, ENLAZA CON USERREPOSITORY: */
-    /* Para que devuelva el usuario (email y password y devuelva también el token)
-    Lo cargará en la url `http://localhost:8000/auth/token` */
+    public function __construct(UserRepository $userRepository)
+    {
+        $this->userRepository = $userRepository;
+    }
 
     /**
-     * @Route("/token", name="get-token", methods={"POST"})
+     * @Route("/api/login_check", methods={"OPTIONS"})
      */
-    public function getTokenAction(Request $request): Response
+    public function options(): Response
     {
-        $email = $request->get('email');
-        $password = $request->get('password');
-
-        $user = $this->userRepository->findByEmailAndPass($email, $password);
-
-        /* $user = $this->get('security.token_storage')->getToken()->getUser(); */
-        $jwtManager = $this->get('lexik_jwt_authentication.jwt_manager');
-        $token = $jwtManager->create($user);
-
-        dump($token);
-        die;
-
-        return new JsonResponse(['respuesta' => $user, 'usuario' => $this->userRespository->getUser()]);
+        return new Response("", 200, [
+            'Access-Control-Allow-Origin' => '*',
+            'Access-Control-Allow-Methods' => 'GET, POST, DELETE, PUT',
+            'Access-Control-Allow-Headers' => 'Content-Type, Authorization'
+        ]);
     }
 }
