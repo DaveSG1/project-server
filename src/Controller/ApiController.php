@@ -41,7 +41,7 @@ class ApiController extends AbstractController
                 'message' => 'TODO OK',                            ésto es la respuesta genérica, en mi caso no le estoy dando uso 
                 'timestamp' => (new DateTime())->format('y-m-d'), */
 
-                'data' => $this->rideRepository->getRides(['r.id, r.name ,r.ccaa', 'r.location']),   /* y aqui los campos que quiero del $select ésto es lo realmente importante, lo que uso */
+                'data' => $this->rideRepository->getRides(['r.id, r.name ,r.ccaa', 'r.location', 'r.image']),   /* y aqui los campos que quiero del $select ésto es lo realmente importante, lo que uso */
             ]
         );
     }
@@ -107,14 +107,6 @@ class ApiController extends AbstractController
             'message' => $status ? "Todo ha ido ok" : "Has metido datos que no corresponden"    /* Ésto es lo que envía al front como respuesta. Si los datos introducidos has sido correctos devolvera Todo ha ido ok, si no, dira Has metido datos que no corresponden */
         ]);
     }
-
-
-
-    /* HASTA AQUÍ ESTÁN TODOS LOS ENDPOINTS TESTADOS EN THUNDER Y FUNCIONAN */
-
-
-
-    /* ENDPOINTS NUEVOS, A REVISAR: */
 
 
     /* Éste endpoint es para editar una entrada en concreto de la tabla Ride. 

@@ -108,6 +108,10 @@ class RideRepository extends ServiceEntityRepository
             $ride->setLevel($data['level']);
             $ride->setUser($user);
 
+            $imagen = (isset($data['imagen'])) ? $data['imagen'] : 'https://images.ecestaticos.com/rZeqqdQkqrChHdT5Mw4NEfzBS-o=/0x0:2272x1514/1600x900/filters:fill(white):format(JPG)/f.elconfidencial.com/original/5f1/cfd/416/5f1cfd416b377fbc5a73a25e849db188.jpg';
+
+            $ride->setImage($imagen);
+
             $this->getEntityManager()->persist($ride);
             $this->getEntityManager()->flush();
             return true;

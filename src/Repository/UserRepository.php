@@ -67,8 +67,6 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     */
 
 
-    /* CONSULTAS NUEVAS CREADAS POR MI, A REVISAR: */
-
     /* Ésta función sería para devolver todos los usario pero filtradas por lo que le indique en el select en cada caso en la UserController, 
     por ejemplo si en la UserController, pongo en getUsers(['u.email']) me traeré de la bbdd sólo los emails de los usuarios (ver UserController el endpoint   por ejemplo que ahí lo uso): */
     public function getUsers(array $select)
@@ -103,4 +101,21 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     }
     /* try catch sirve para que, si se produce una excepción en el bloque del try, entraría dentro del catch donde se especifica la excepción (en este caso, si la consulta
     falla porque recibe un tipo de datos que no corresponde para ese campo, la función createUser devolverá un false, si los datos introducidos son correctos, devolvera un true)  */
+
+
+    /* CONSULTA NUEVA CREADA, A REVISAR: */
+
+
+    /* Ésta función (consulta) es para que me devuelva un usuario (con su email y password): */
+
+    public function findByEmailAndPass($email, $password): ?User
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.email = :email')
+            ->setParameter('email', $email)
+            ->andWhere('u.password = :password')
+            ->setParameter('password', $password)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }
