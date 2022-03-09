@@ -48,10 +48,10 @@ class AdminController extends AbstractController
 
 
     /* Éste endpoint lo usaré en el crud y me devuelve todas las rutas que gestione un determinado usuario (el que esté conectado) (en la linea 53 digo q datos quiero traerme de la bbdd y en el front diré cual de esos datos quiero pintar)
-    cargará en la url "http://localhost:8000/admin/rides/read/user/{user}": */
+    cargará en la url "http://localhost:8000/admin/rides/read/user": */
 
     /**
-     * @Route("/read/user/{user}", name="admin_rides_shown_by_user", methods={"GET"})
+     * @Route("/read/user", name="admin_rides_shown_by_user", methods={"GET"})
      */
     public function ridesByUserAction(User $user): Response
     {
