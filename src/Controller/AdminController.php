@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Security;
 
 /**
  * @Route("/admin/rides")
@@ -48,17 +49,21 @@ class AdminController extends AbstractController
 
 
     /* Éste endpoint lo usaré en el crud y me devuelve todas las rutas que gestione un determinado usuario (el que esté conectado) (en la linea 53 digo q datos quiero traerme de la bbdd y en el front diré cual de esos datos quiero pintar)
-    cargará en la url "http://localhost:8000/admin/rides/read/user": */
+    cargará en la url "http://localhost:8000/admin/rides/read/user": 
+    COGER DE EJEMPLO PARA LOS DEMÁS DE ADMINCONTROLLER PARA USAR EN EL CRUD*/
 
     /**
      * @Route("/read/user", name="admin_rides_shown_by_user", methods={"GET"})
      */
-    public function ridesByUserAction(User $user): Response
+    public function ridesByUserAction(Security $security): Response
     {
+        $security->getUser();       /* con ésto saco mediante el token actual el usuario activo ahora mismo, hay que usarlo en todas las funciones del AdminController en las que necesite el usuario  */
+
         return new JsonResponse(
             [
-                'data' => $this->rideRepository->getRidesWithSelectByUser(['r.id, r.name ,r.ccaa', 'r.location', 'r.level'], $user),
+                'data' => $this->rideRepository->getRidesWithSelectByUser(['r.name', 'r.ccaa', 'r.location'], $security->getUser())
             ]
+
         );
     }
 
