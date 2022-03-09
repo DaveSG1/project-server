@@ -31,7 +31,7 @@ class AdminController extends AbstractController
     cargará en la url "http://localhost:8000/admin/rides/read": */
 
     /**
-     * @Route("/read", name="read_rides", methods={"GET"})
+     * @Route("/read", name="admin_read_rides", methods={"GET"})
      */
     public function allRidesAction(): Response
     {
@@ -51,7 +51,7 @@ class AdminController extends AbstractController
     cargará en la url "http://localhost:8000/admin/rides/read/user/{user}": */
 
     /**
-     * @Route("/read/user/{user}", name="rides_shown_by_user", methods={"GET"})
+     * @Route("/read/user/{user}", name="admin_rides_shown_by_user", methods={"GET"})
      */
     public function ridesByUserAction(User $user): Response
     {
@@ -67,7 +67,7 @@ class AdminController extends AbstractController
     cargará en la url `http://localhost:8000/admin/rides/read/route/${id}` donde ${id} será el id de la ruta particular a consultar: */
 
     /**
-     * @Route("/read/route/{ride}", name="show_detailed_ride", methods={"GET"})
+     * @Route("/read/route/{ride}", name="admin_show_detailed_ride", methods={"GET"})
      */
     public function getRouteAction(Ride $ride): Response
     {
@@ -81,7 +81,7 @@ class AdminController extends AbstractController
     Lo cargará en la url "http://localhost:8000/admin/rides/read/booking/see/{ride}": */
 
     /**
-     * @Route("/read/booking/see/{ride}", name="read-booking", methods={"GET"})
+     * @Route("/read/booking/see/{ride}", name="admin_read-booking", methods={"GET"})
      */
     public function seeBookingAvailabilityAction(Ride $ride): Response
     {
@@ -95,7 +95,7 @@ class AdminController extends AbstractController
     cargará en la url `http://localhost:8000/admin/rides/create/${id}` donde ${id} será el id del usuario activo: */
 
     /**
-     * @Route("/create/{user}", name="create-ride", methods={"POST"})
+     * @Route("/create/{user}", name="admin_create-ride", methods={"POST"})
      */
     public function createAction(Request $request, User $user): Response
     {
@@ -113,7 +113,7 @@ class AdminController extends AbstractController
     Lo cargará en la url `http://localhost:8000/admin/rides/edit/${ride}` donde ${ride} será el id de la ruta que queramos modificar: */
 
     /**
-     * @Route("/edit/{ride}", name="edit-ride", methods={"PUT"})
+     * @Route("/edit/{ride}", name="admin_edit-ride", methods={"PUT"})
      */
     public function editAction(Ride $ride, Request $request): Response
     {
@@ -129,7 +129,7 @@ class AdminController extends AbstractController
     Lo cargará en la url `http://localhost:8000/admin/rides/delete/${ride}` donde ${ride} será el id de la ruta que queramos eliminar: */
 
     /**
-     * @Route("/delete/{ride}", name="delete-ride", methods={"DELETE"})
+     * @Route("/delete/{ride}", name="admin_delete-ride", methods={"DELETE"})
      */
     public function deleteAction(Ride $ride): Response
     {

@@ -14,10 +14,6 @@ security:
         class: App\Entity\User
         property: email
   firewalls:
-    dev:
-      pattern: ^/(_(profiler|wdt)|css|images|js)/
-      security: false
-
     login:
       pattern: ^/api/login
       stateless: true
@@ -28,6 +24,11 @@ security:
 
     api:
       pattern: ^/api
+      stateless: true
+      jwt: ~
+
+    admin:
+      pattern: ^/admin
       stateless: true
       jwt: ~
 
