@@ -63,6 +63,7 @@ class UserController extends AbstractController
             'status' => $status,
             'message' => $status ? "Todo ha ido ok" : "Has metido datos que no corresponden"    /* Ésto es lo que envía al front como respuesta. Si los datos introducidos has sido correctos devolvera Todo ha ido ok, si no, dira Has metido datos que no corresponden */
         ]);
+        //hola mundo desde un comitt antiguo escrito pòr miguel!
     }
 
 
