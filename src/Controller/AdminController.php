@@ -61,7 +61,7 @@ class AdminController extends AbstractController
 
         return new JsonResponse(
             [
-                'data' => $this->rideRepository->getRidesWithSelectByUser(['r.name', 'r.ccaa', 'r.location'], $security->getUser())
+                'data' => $this->rideRepository->getRidesWithSelectByUser(['r.name', 'r.ccaa', 'r.location', 'r.image'], $security->getUser())
             ]
 
         );
