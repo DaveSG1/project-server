@@ -34,7 +34,7 @@ class RideRepository extends ServiceEntityRepository
     {
         //ésto de abajo sería como hacer ésta consulta en phpmyadmin:  select {selectParam} from ride r
 
-        return $this->createQueryBuilder('r')
+        return $this->createQueryBuilder('r')->where('r.active = 1')
             ->select($select)
             ->getQuery()
             ->getResult();
@@ -81,7 +81,7 @@ class RideRepository extends ServiceEntityRepository
     {
 
         //ésto de abajo sería como hacer ésta consulta en phpmyadmin:  select {selectParam} from ride r where r.user_id = {userid}
-        return $this->createQueryBuilder('r')
+        return $this->createQueryBuilder('r')->where('r.active = 1')
             ->select($select)
             ->andWhere('r.user = :user')
             ->setParameter('user', $user)
@@ -127,55 +127,44 @@ class RideRepository extends ServiceEntityRepository
 
     /* Ésta función sería para editar una Ruta concreta: */
 
-    public function editRide(array $data, Ride $ride): bool
+    public function editRide(array $data, Ride $ride, EntityManagerInterface $em): bool
     {
         try {
 
-            if (isset($data['active'])) {
-                $ride->setActive($data['active']);
-            }
-
-            if (isset($data['ccaa'])) {
+            if (!empty($data['ccaa'])) {
                 $ride->setCcaa($data['ccaa']);
             }
 
-            if (isset($data['name'])) {
+            if (!empty($data['name'])) {
                 $ride->setName($data['name']);
             }
 
-            if (isset($data['location'])) {
+            if (!empty($data['location'])) {
                 $ride->setLocation($data['location']);
             }
 
-            if (isset($data['address'])) {
+            if (!empty($data['address'])) {
                 $ride->setAddress($data['address']);
             }
 
-            if (isset($data['telephone'])) {
+            if (!empty($data['telephone'])) {
                 $ride->setTelephone($data['telephone']);
             }
 
-            if (isset($data['duration'])) {
+            if (!empty($data['duration'])) {
                 $ride->setDuration($data['duration']);
             }
 
-            if (isset($data['description'])) {
+            if (!empty($data['description'])) {
                 $ride->setDescription($data['description']);
             }
 
-            if (isset($data['level'])) {
+            if (!empty($data['level'])) {
                 $ride->setLevel($data['level']);
             }
 
-            /* if (isset($data['image'])) {
-                $ride->setImage($data['image']);
-            } */
-
-            //$ride->setUser($user);
-
-
-            $this->getEntityManager()->persist($ride);
-            $this->getEntityManager()->flush();
+            $em->persist($ride);
+            $em->flush();
             return true;
         } catch (Throwable $exception) {
             return false;
@@ -185,11 +174,13 @@ class RideRepository extends ServiceEntityRepository
 
     /* Ésta función sería para eliminar una Ruta concreta: */
 
-    public function deleteRide(Ride $ride): bool
+    public function deleteRide(int $id, RideRepository $rideRepository, EntityManagerInterface $em): bool
     {
         try {
-            $this->em->remove($ride);
-            $this->em->flush();
+            $ride = $rideRepository->find($id);
+            $ride->setActive(false);
+            $em->persist($ride);
+            $em->flush();
             return true;
         } catch (Throwable $exception) {
             return false;

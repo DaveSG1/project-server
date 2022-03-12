@@ -115,13 +115,13 @@ class ApiController extends AbstractController
     /**
      * @Route("/edit/{ride}", name="edit-ride", methods={"PUT"})
      */
-    public function editAction(Ride $ride, Request $request): Response
-    {
-        $data = json_decode($request->getContent(), true);
-        $this->rideRepository->editRide($data, $ride);
+    // public function editAction(Ride $ride, Request $request): Response
+    // {
+    //     $data = json_decode($request->getContent(), true);
+    //     $this->rideRepository->editRide($data, $ride);
 
-        return new JsonResponse(['status' => true]);
-    }
+    //     return new JsonResponse(['status' => true]);
+    // }
 
 
 
@@ -131,10 +131,10 @@ class ApiController extends AbstractController
     /**
      * @Route("/delete/{ride}", name="delete-ride", methods={"DELETE"})
      */
-    public function deleteAction(Ride $ride): Response
-    {
-        return new JsonResponse(
-            ['status' => $this->rideRepository->deleteRide($ride)]
-        );
-    }
+    // public function deleteAction(Ride $ride): Response
+    // {
+    //     return new JsonResponse(
+    //         ['status' => $this->rideRepository->deleteRide($ride)]
+    //     );
+    // }
 }

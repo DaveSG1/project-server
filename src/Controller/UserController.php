@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 
@@ -60,10 +61,10 @@ class UserController extends AbstractController
     /**
      * @Route("/create", name="create-user", methods={"POST"})
      */
-    public function createUserAction(Request $request)
+    public function createUserAction(Request $request, UserPasswordHasherInterface $hasher)
     {
         $data = json_decode($request->getContent(), true);
-        $status = $this->userRepository->createUser($data);   /* sera true o false según recibe del userrepository (si se crea o no la entrada) */
+        $status = $this->userRepository->createUser($data, $hasher);   /* sera true o false según recibe del userrepository (si se crea o no la entrada) */
 
         return new JsonResponse([
             'status' => $status,

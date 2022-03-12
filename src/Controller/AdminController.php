@@ -61,7 +61,7 @@ class AdminController extends AbstractController
 
         return new JsonResponse(
             [
-                'data' => $this->rideRepository->getRidesWithSelectByUser(['r.name', 'r.ccaa', 'r.location', 'r.image'], $security->getUser())
+                'data' => $this->rideRepository->getRidesWithSelectByUser(['r.id', 'r.name', 'r.ccaa', 'r.location', 'r.image'], $security->getUser())
             ]
 
         );
@@ -100,12 +100,12 @@ class AdminController extends AbstractController
     cargará en la url `http://localhost:8000/admin/rides/create/${id}` donde ${id} será el id del usuario activo: */
 
     /**
-     * @Route("/create/{user}", name="admin_create-ride", methods={"POST"})
+     * @Route("/create", name="admin_create-ride", methods={"POST"})
      */
-    public function createAction(Request $request, User $user): Response
+    public function createAction(Request $request, Security $security): Response
     {
         $data = json_decode($request->getContent(), true);
-        $status = $this->rideRepository->createRide($data, $user);   /* sera true o false según recibe del Riderepository (si se crea o no la entrada) */
+        $status = $this->rideRepository->createRide($data, $security->getUser());   /* sera true o false según recibe del Riderepository (si se crea o no la entrada) */
 
         return new JsonResponse([
             'status' => $status,
@@ -118,28 +118,29 @@ class AdminController extends AbstractController
     Lo cargará en la url `http://localhost:8000/admin/rides/edit/${ride}` donde ${ride} será el id de la ruta que queramos modificar: */
 
     /**
-     * @Route("/edit/{ride}", name="admin_edit-ride", methods={"PUT"})
+     * @Route("/edit/{id}", name="admin_edit-ride", methods={"PUT"}, requirements={"id": "\d+"})
      */
-    public function editAction(Ride $ride, Request $request): Response
+    public function editAction(int $id, Request $request, RideRepository $rideRepository, EntityManagerInterface $em): Response
     {
+        $ride = $rideRepository->find($id);
         $data = json_decode($request->getContent(), true);
-        $this->rideRepository->editRide($data, $ride);
+        $this->rideRepository->editRide($data, $ride, $em);
 
-        return new JsonResponse(['status' => true]);
+        return new JsonResponse([Response::HTTP_ACCEPTED]);
     }
 
 
 
     /* Éste endpoint es para eliminar una entrada en concreto de la tabla Ride. 
-    Lo cargará en la url `http://localhost:8000/admin/rides/delete/${ride}` donde ${ride} será el id de la ruta que queramos eliminar: */
+    Lo cargará en la url `http://localhost:8000/admin/rides/delete/${id}` donde ${ride} será el id de la ruta que queramos eliminar: */
 
     /**
-     * @Route("/delete/{ride}", name="admin_delete-ride", methods={"DELETE"})
+     * @Route("/delete/{id}", name="admin_delete-ride", methods={"PUT"}, requirements={"id": "\d+"})
      */
-    public function deleteAction(Ride $ride): Response
+    public function deleteAction(int $id, RideRepository $rideRepository, EntityManagerInterface $em): Response
     {
-        return new JsonResponse(
-            ['status' => $this->rideRepository->deleteRide($ride)]
-        );
+        $rideRepository->deleteRide($id, $rideRepository, $em);
+
+        return new JsonResponse(Response::HTTP_ACCEPTED);
     }
 }
