@@ -37,10 +37,6 @@ class ApiController extends AbstractController
     {
         return new JsonResponse(
             [
-                /*  'status' => true,
-                'message' => 'TODO OK',                            ésto es la respuesta genérica, en mi caso no le estoy dando uso 
-                'timestamp' => (new DateTime())->format('y-m-d'), */
-
                 'data' => $this->rideRepository->getRides(['r.id, r.name ,r.ccaa', 'r.location', 'r.image']),   /* y aqui los campos que quiero del $select ésto es lo realmente importante, lo que uso */
             ]
         );

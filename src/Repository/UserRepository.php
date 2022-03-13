@@ -101,11 +101,9 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             return false;
         }
     }
-    /* try catch sirve para que, si se produce una excepción en el bloque del try, entraría dentro del catch donde se especifica la excepción (en este caso, si la consulta
+    /* try catch se usa aquí para que, si se produce una excepción en el bloque del try, entraría dentro del catch donde se especifica la excepción (en este caso, si la consulta
     falla porque recibe un tipo de datos que no corresponde para ese campo, la función createUser devolverá un false, si los datos introducidos son correctos, devolvera un true)  */
 
-
-    /* CONSULTA NUEVA CREADA, A REVISAR: */
 
 
     /* Ésta función (consulta) es para que me devuelva un usuario (con su email y password): */

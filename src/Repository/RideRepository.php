@@ -178,7 +178,7 @@ class RideRepository extends ServiceEntityRepository
     {
         try {
             $ride = $rideRepository->find($id);
-            $ride->setActive(false);
+            $ride->setActive(false);             /* con ésta línea cambio la propiedad active a false (a 0 en lugar del 1 que tiene por defecto) y así hago un soft delete */
             $em->persist($ride);
             $em->flush();
             return true;
@@ -201,40 +201,3 @@ class RideRepository extends ServiceEntityRepository
             ->getArrayResult();
     }
 }
-
-
-
-
-
-/**            
- 
- */
-
-    // /**
-    //  * @return Ride[] Returns an array of Ride objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('r')
-            ->andWhere('r.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('r.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Ride
-    {
-        return $this->createQueryBuilder('r')
-            ->andWhere('r.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */

@@ -13,9 +13,6 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 
-/* Todo es nuevo, revisar: */
-
-
 /**
  * @Route("/api/users")
  */
@@ -34,7 +31,6 @@ class UserController extends AbstractController
     /* Aqui creamos una funcion para CONSULTAR los usuarios existentes en mi bbdd, un metodo get en esta url "http://localhost:8000/api/users/read" */
 
 
-
     /* Éste endpoint me devuelve todos los usuarios de la bbdd 
     Cargará en la url "http://localhost:8000/api/users/read": */
 
@@ -45,11 +41,7 @@ class UserController extends AbstractController
     {
         return new JsonResponse(
             [
-                /*  'status' => true,
-                'message' => 'TODO OK',                            ésto es la respuesta genérica, en mi caso no le estoy dando uso 
-                'timestamp' => (new DateTime())->format('y-m-d'), */
-
-                'data' => $this->userRepository->getUsers(['u.email, u.active']),   /* y aqui los campos que quiero del $select ésto es lo realmente importante, lo que uso */
+                'data' => $this->userRepository->getUsers(['u.email, u.active']),   /* y aqui los campos que quiero del $select, lo que tendré disponibles para usar en el front */
             ]
         );
     }
@@ -68,16 +60,13 @@ class UserController extends AbstractController
 
         return new JsonResponse([
             'status' => $status,
-            'message' => $status ? "Todo ha ido ok" : "Has metido datos que no corresponden"    /* Ésto es lo que envía al front como respuesta. Si los datos introducidos has sido correctos devolvera Todo ha ido ok, si no, dira Has metido datos que no corresponden */
+            'message' => $status ? "Todo ha ido ok" : "Has introducido datos que no corresponden"    /* Ésto es lo que envía al front como respuesta. Si los datos introducidos has sido correctos devolvera Todo ha ido ok, si no, dira Has metido datos que no corresponden */
         ]);
     }
 
 
 
-
-
-
-    /* ÉSTOS DE ABAJO SON LOS ENDPOINTS ANTIGUOS (NO LOS ESTOY USANDO AHORA) QUE ME CREE SIGUIENDO EL EJEMPLO DEL EJERCICIO REALIZADO EN CLASE DE JOSE: */
+    /* ÉSTOS DE ABAJO SON LOS ENDPOINTS ANTIGUOS (NO LOS ESTOY USANDO): */
 
 
     /* Aqui creamos una funcion para AÑADIR usuarios nuevos a mi bbdd, un metodo post en esta url http://localhost/symfony2/public/index.php/api/usuario */
@@ -102,8 +91,6 @@ class UserController extends AbstractController
             'content' => $content
         ]);
     }
-
-
 
     /* Aqui creamos una funcion para EDITAR un usuario ya existente en mi bbdd (le paso el id del usuario por parametros en la ruta y los recibe como parametros en la funcion), un metodo put en esta url http://localhost/symfony2/public/index.php/api/usuario */
 

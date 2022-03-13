@@ -28,7 +28,7 @@ class AdminController extends AbstractController
         $this->rideRepository = $rideRepository;
     }
 
-    /* Éste endpoint es el que uso en RutasPage y me devuelve la info escueta de cada ruta (en la linea 36 digo q datos quiero traerme de la bbdd y en Ruta cual de esos datos quiero pintar)
+    /* Éste endpoint es el que uso en RutasPage y me devuelve la info escueta de cada ruta (en la linea 36 digo q datos quiero traerme de la bbdd y en Ruta cuales de esos datos quiero pintar)
     cargará en la url "http://localhost:8000/admin/rides/read": */
 
     /**
@@ -38,19 +38,14 @@ class AdminController extends AbstractController
     {
         return new JsonResponse(
             [
-                /*  'status' => true,
-                'message' => 'TODO OK',                            ésto es la respuesta genérica, en mi caso no le estoy dando uso 
-                'timestamp' => (new DateTime())->format('y-m-d'), */
-
-                'data' => $this->rideRepository->getRides(['r.id, r.name ,r.ccaa', 'r.location', 'r.image']),   /* y aqui los campos que quiero del $select ésto es lo realmente importante, lo que uso */
+                'data' => $this->rideRepository->getRides(['r.id, r.name ,r.ccaa', 'r.location', 'r.image']),   /* y aqui los campos que quiero del $select, lo que tendré disponibles para usar en el front */
             ]
         );
     }
 
 
     /* Éste endpoint lo usaré en el crud y me devuelve todas las rutas que gestione un determinado usuario (el que esté conectado) (en la linea 53 digo q datos quiero traerme de la bbdd y en el front diré cual de esos datos quiero pintar)
-    cargará en la url "http://localhost:8000/admin/rides/read/user": 
-    COGER DE EJEMPLO PARA LOS DEMÁS DE ADMINCONTROLLER PARA USAR EN EL CRUD*/
+    cargará en la url "http://localhost:8000/admin/rides/read/user": */
 
     /**
      * @Route("/read/user", name="admin_rides_shown_by_user", methods={"GET"})
@@ -61,7 +56,7 @@ class AdminController extends AbstractController
 
         return new JsonResponse(
             [
-                'data' => $this->rideRepository->getRidesWithSelectByUser(['r.id', 'r.name', 'r.ccaa', 'r.location', 'r.image'], $security->getUser())
+                'data' => $this->rideRepository->getRidesWithSelectByUser(['r.id', 'r.name', 'r.ccaa', 'r.location', 'r.image', 'r.address', 'r.telephone', 'r.duration', 'r.description', 'r.level'], $security->getUser())
             ]
 
         );
