@@ -3,6 +3,15 @@
 Este proyecto ha sido creado con [Symfony](https://symfony.com/download).
 
 
+## Tecnologías utilizadas 
+
+PHP 
+
+Symfony
+
+MySQL
+
+
 ## Instrucciones para la instalación
 
 Primero: Comprobar que se dispone de Symfony y Composer [composer](https://getcomposer.org/download/)
@@ -21,7 +30,7 @@ Quinto: Ejecutar comando `symfony console doctrine:database:create`
 
 Sexto : Ejecutar comando `symfony console doctrine:migrations:migrate`
 
-Séptimo: En la carpeta files se encuentran los archivos sql de las entidades de la base de datos para poder importarlos la base de datos generada en el quinto apartado.
+Séptimo: En la carpeta files se encuentran los archivos sql de las distintas entidades de la base de datos para poder importarlos en ésta.
 
 Octavo: Ejecutar comando `symfony console lexik:jwt:generate-keypair` para generar las keys JWT para el login y el registro.
 
